@@ -1,7 +1,7 @@
 import subprocess
 from pathlib import Path
 
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from PyPDF2 import PdfReader, PdfWriter
 
 
 def PPTXtoPDF(file_path: str, dir: str) -> None:
@@ -11,15 +11,15 @@ def PPTXtoPDF(file_path: str, dir: str) -> None:
     generated_file_path = Path(dir).joinpath(
         Path(file_path).stem + ".pdf")
 
-    reader = PdfFileReader(generated_file_path)
-    writer = PdfFileWriter()
+    reader = PdfReader(generated_file_path)
+    writer = PdfWriter()
 
     writer.append_pages_from_reader(reader)
-    writer.addMetadata({
+    writer.add_metadata({
         "/Author": 'IFPE Open Source',
         "/Title": f"Certificate for {Path(file_path).stem}",
-        "/Subject": "Certificate generated using IFPE Open Source Certificate Generator\nCertificado gerado usando o IFPE Open Source Certificate Generator\nhttps://github.com/ifpeopensource/certificate-generator",
-        "/Creator": "IFPE Open Source Certificate Generator",
+        "/Subject": "Certificate generated using IFPE Open Source Certificate Generator\nhttps://github.com/ifpeopensource/certificate-generator",
+        "/Creator": "IFPE Open Source Certificate Generator - Updated by Rakibul Hasan",
     })
 
     with open(generated_file_path, "wb") as fp:

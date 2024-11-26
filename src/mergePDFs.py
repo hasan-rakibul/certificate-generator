@@ -6,7 +6,7 @@ def mergePDFs(file_paths: list, output_path: str) -> None:
     for file_path in file_paths:
         merger.append(file_path)
 
-    merger.addMetadata({
+    merger.add_metadata({
         "/Author": 'IFPE Open Source',
         "/Title": "Certificates",
         "/Subject": "Certificates generated using IFPE Open Source Certificate Generator\nCertificados gerados usando o IFPE Open Source Certificate Generator\nhttps://github.com/ifpeopensource/certificate-generator",

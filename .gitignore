@@ -6,3 +6,8 @@ output
 names.txt
 data.csv
 __pycache__
+
+.python-version
+.DS_Store
+.make_env_ready.sh
+*.xlsx

@@ -10,14 +10,14 @@ from src.log import Log
 from src.generatePPTX import generatePPTX
 from src.PPTXtoPDF import PPTXtoPDF
 from src.mergePDFs import mergePDFs
-from src.readConfig import readCSVConfig, readTXTConfig
+from src.readConfig import readCSVConfig, readTXTConfig, readExcelConfig
 
 logger = Log()
 
 
 @click.command()
 @click.argument('output_file_path', nargs=1, required=False, default="./output/certificates.pdf")
-@click.option('--model', '-m', default="./model.pptx", help="Model file path", show_default=True)
+@click.option('--model', '-m', default="./model-attendance.pptx", help="Model file path", show_default=True)
 @click.option('--data', '-d', help="Data file path", required=True)
 @click.option(
     '--multiple-fields/--name-only',
@@ -73,17 +73,26 @@ def main(
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(Path(output_dir).joinpath('pptx'), exist_ok=True)
 
-    if multiple_fields:
-        parsed_data = readCSVConfig(data)
-        for value_row in parsed_data['values']:
-            print(f"Generating certificate for {value_row[0]}")
-            generateCertificate(model, parsed_data['fields'],
-                                value_row, options, output_dir)
-    else:
+    if not multiple_fields:
+        assert data.endswith(".txt"), "Data file must be a TXT file"
         parsed_data = readTXTConfig(data)
         for name in parsed_data:
             print(f"Generating certificate for {name}")
             generateCertificate(model, ['name'], [name], options, output_dir)
+
+    elif data.endswith(".xlsx"):
+        parsed_data = readExcelConfig(data)
+        for value_row in parsed_data['values']:
+            # print(f"Generating certificate for {parsed_data["file"]}")
+            generateCertificate(model, parsed_data['fields'],
+                                value_row, options, output_dir)
+    elif data.endswith(".csv"):
+        parsed_data = readCSVConfig(data)
+        import pdb; pdb.set_trace()
+        for value_row in parsed_data['values']:
+            print(f"Generating certificate for {value_row[0]}")
+            generateCertificate(model, parsed_data['fields'],
+                                value_row, options, output_dir)
 
     print("All certificates generated. Merging...")
     file_paths = glob.glob(f"{output_dir}/*.pdf")

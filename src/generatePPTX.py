@@ -9,6 +9,7 @@ def generatePPTX(model: str, fields: List[str], data: List[str], options: Dict[s
     prs = Presentation(model)
     slide = prs.slides[0]
 
+    import pdb; pdb.set_trace()
     for shape in slide.shapes:
         if not shape.has_text_frame:
             continue
